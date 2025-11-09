@@ -38,7 +38,7 @@ echo "<h2> <b>Ejercicio " .$result->ExerciseNum ." - Parte " .$result->ExerciseP
 
 
 <form action=\"check.php\" method=\"POST\">
-	<input type=\"hidden\" id=\"ExerciseID\" name=\"ExerciseID\" value=\"" . $id . " \">
+	<input type=\"hidden\" id=\"ExerciseID\" name=\"ExerciseID\" value="<?php echo htmlspecialchars($id); ?>">
 
 <table>
 	<tr class=\"header-row\">
@@ -107,4 +107,5 @@ echo "<h2> <b>Ejercicio " .$result->ExerciseNum ." - Parte " .$result->ExerciseP
 <script src="tcp.js"></script>
 </body>
 </html>
+
 
