@@ -25,11 +25,16 @@ try {
 
 //$ex stores all SegmentID, sender and tic of the exercise
 $id = $_GET['id'];
-$search = "SELECT * FROM EnunTCP WHERE ExerciseID=".$id;
+$search = "SELECT * FROM EnunTCP WHERE ExerciseID= :eid";
 $ex = $conn->prepare($search);
 $ex->setFetchMode(PDO::FETCH_OBJ);
-$ex->execute();
+$ex->execute([':eid' => $id]);
 $result = $ex->fetch();
+
+if (!$result) {
+        // Si no hay resultado, detenemos la ejecución antes de enviar HTML
+        die("Error: El ejercicio con ID " . htmlspecialchars($id) . " no existe en la base de datos.");
+}
 
 
 
@@ -107,4 +112,5 @@ echo "<h2> <b>Ejercicio " .$result->ExerciseNum ." - Parte " .$result->ExerciseP
 <script src="tcp.js"></script>
 </body>
 </html>
+
 
