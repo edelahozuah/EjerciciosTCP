@@ -21,11 +21,13 @@ try {
 } catch(PDOException $e) {
   echo "Connection to the database failed: " . $e->getMessage();
 }
+//Security: force ExerciseID to be an integer
+$exercise_id = (int) ($_POST["ExerciseID"] ?? 0);
 
 //$ex stores all SegmentID, sender and tic of the exercise
 $ex = $conn->prepare("SELECT * FROM Exercises WHERE ExerciseID= :eid");
 $ex->setFetchMode(PDO::FETCH_OBJ);
-$ex->execute(array(':eid' => $_POST["ExerciseID"]));
+$ex->execute(array(':eid' => $exercise_id));
 
 //echo "Exercise: " . $_POST["ExerciseID"] . " <br>";
 
@@ -33,7 +35,14 @@ $ex->execute(array(':eid' => $_POST["ExerciseID"]));
 $arraySeg = array();
 $tic = 1;
 $sender = 0;
-$lang = $_POST["langID"];
+
+// SECURITY: lang must be a valid language
+$allowed_langs = ['es', 'en'];
+$lang = $_POST['langID'] ?? 'es';
+if (!in_array($lang, $allowed_langs)) {
+    $lang = 'es';
+}
+
 include('locale/'. $lang . '.php');
 
 while ($row = $ex->fetch()){
@@ -215,4 +224,5 @@ echo "  <p>
 <script src="tcp.js"></script>
 </body>
 </html>
+
 
